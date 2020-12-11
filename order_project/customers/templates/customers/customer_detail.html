@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section"></div>
+        <div>
+            <a class="btn btn-secondary btn-sm mb-2 mt-5 ml-5" href="{% url 'customer-update' object.id %}">Bearbeiten</a>
+            <a class="btn btn-danger btn-sm mb-2 mt-5" href="{% url 'customer-delete' object.id %}">Löschen</a>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4 ml-5">Kundeninformationen</legend>
+                {% crispy form %}
+            </fieldset>
+        </form>
+    </div>
+{% endblock content %}

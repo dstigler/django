@@ -1,0 +1,68 @@
+<table class="table table-hover">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Ersteller</th>
+        <th scope="col">Anfangsdatum</th>
+        <th scope="col">Lieferdatum</th>
+        <th scope="col">Titel</th>
+        <th scope="col">Kunde</th>
+        <th scope="col">Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for order in orders %}
+        <tr class='clickable-row bg{{ order.get_state_visualisation }}' data-href="{% url 'order-detail' order.id %}">
+            <!-- <th scope="row">1</th> -->
+            <td scope="col"><a class="mr-2" href="{% url 'user-orders' order.creator.username %}">{{ order.creator }}</a></td>
+            <td scope="col">
+                {% if order.get_state_urgency == 2 %}
+                    <p class="font-weight-bold">{{ order.date_start|date:"d.F y, G:i" }}</p>
+                {% else %}
+                    <p>{{ order.date_start|date:"d.F y, G:i" }}</p>
+                {% endif %}
+            </td>
+            <td scope="col">
+                {% if order.get_state_urgency == 3 %}
+                    <p class="font-weight-bold">{{ order.date_pickup|date:"d.F y, G:i" }}</p>
+                {% else %}
+                    <p>{{ order.date_pickup|date:"d.F y, G:i" }}</p>
+                {% endif %}
+            </td>
+            <td scope="col">{{ order.title }}</td>
+            <td scope="col">
+                {% if order.customer is not None %}
+                <a class="article-title" href="{% url 'customer-orders' order.customer.id %}">{{ order.customer }}</a>
+                {% else %}
+                <a>-----</a>
+                {% endif %}</td>
+            <td scope="col">
+                {% if order.get_state_urgency == 0 %}
+                    <p class="font-weight-bold">{{ order.state }}</p>
+                {% else %}
+                    <p>{{ order.state }}</p>
+                    
+                {% endif %}
+                </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div id="pagination">
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4 pagination-btn" href="#" onclick="return false;" page_number="1"><<</a>
+        <a class="btn btn-outline-info mb-4 pagination-btn" href="#" onclick="return false;" page_number="{{ page_obj.previous_page_number }}"><</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4 pagination-btn" href="#" onclick="return false;" page_number="{{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4 pagination-btn" href="#" onclick="return false;" page_number="{{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4 pagination-btn" href="#" onclick="return false;" page_number="{{ page_obj.next_page_number }}">></a>
+        <a class="btn btn-outline-info mb-4 pagination-btn" href="#" onclick="return false;" page_number="{{ page_obj.paginator.num_pages }}">>></a>
+    {% endif %}
+{% endif %}
+</div>

@@ -1,0 +1,19 @@
+python3 -m venv ~/Projekte/djangodev/
+python -m pip install -e django/
+git clone https://github.com/django/django.git
+
+source ./bin/activate
+
+django-admin startproject order_project
+django-admin startapp orderlist
+python manage.py runserver
+
+deactivate
+
+python manage.py makemigrations polls //Model erstellen/updaten Create-script
+python manage.py sqlmigrate polls 0001 //in der db erstellen
+
+python manage.py check; //auf probleme prüfen ohne die db zu ändern
+ 
+python manage.py migrate //model und schema synchronisieren
+

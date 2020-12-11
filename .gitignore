@@ -16,3 +16,13 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+
+bin/
+
+lib/
+
+share/
+
+django/
+
+lib64

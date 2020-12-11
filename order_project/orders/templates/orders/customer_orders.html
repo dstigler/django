@@ -1,0 +1,67 @@
+{% extends "index.html" %}
+{% block content %}
+
+    <h1 class="customer_orders_title" data-href="{% url "ajax_get_customer" customer_id %}">Aufträge für <a id="customer_name" href="{% url 'customer-details' customer_id %}" >{{ view.kwargs.username }}</a> ({{ page_obj.paginator.count }})</h1>
+    <table class="table table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Ersteller</th>
+            <th scope="col">Anfangsdatum</th>
+            <th scope="col">Lieferdatum</th>
+            <th scope="col">Titel</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr class='clickable-row bg{{ order.get_state_visualisation }}' data-href="{% url 'order-detail' order.id %}">
+                <!-- <th scope="row">1</th> -->
+                <td scope="col"><a class="mr-2" href="{% url 'user-orders' order.creator.username %}">{{ order.creator }}</a></td>
+                <td scope="col">{{ order.date_start|date:"d.F y, G:i" }}</td>
+                <td scope="col">{{ order.date_pickup|date:"d.F y, G:i" }}</td>
+                <td scope="col">{{ order.title }}</td>
+                <td scope="col">{{ order.state }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4" href="?page=1"><<</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"><</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">></a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">>></a>
+        {% endif %}
+    {% endif %}
+    
+{% endblock content %}
+{%  block extra_js %}
+<script type="text/javascript">
+    $(".clickable-row").on('click', function () {
+        window.location = $(this).data('href');
+    });
+
+    $(document).ready(function () {
+        const element = $(".customer_orders_title");
+        const url = element.attr('data-href');
+        $.ajax({
+            method: 'GET',
+            dataType: 'json',
+            url: url,
+            success : function (data) {
+                $('#customer_name').html(data.result)
+            }
+        })
+    });
+</script>
+{% endblock extra_js %}

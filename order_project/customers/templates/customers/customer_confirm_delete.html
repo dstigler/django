@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Kunden löschen</legend>
+                <h2>Sind Sie sicher den Kunden "{{ object }}" endgültig zu löschen?</h2>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Ja, Löschen</button>
+                <a class="btn btn-outline-secondary" href="{% url 'customer-details' object.id %}">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

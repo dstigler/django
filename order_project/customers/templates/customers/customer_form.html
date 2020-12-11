@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section"></div>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group ml-5">
+                {% if object %}
+                    <legend class="border-bottom mb-4 mt-5">Kundeninformationen ändern</legend>
+                {% else %}
+                    <legend class="border-bottom mb-4 mt-5">Neuer Kunde</legend>
+                {% endif %}
+                {% crispy form %}
+            </fieldset>
+            <!-- <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Speichern</button>
+            </div> -->
+        </form>
+    </div>
+{% endblock content %}

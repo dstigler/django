@@ -1,0 +1,15 @@
+asgiref==3.2.3
+-e git+https://github.com/django/django.git@b94764e178056a2118eff3f53f567207219e737d#egg=Django
+django-ckeditor==5.9.0
+django-crispy-forms==1.8.1
+django-js-asset==1.2.2
+django-pandas==0.6.1
+django-tables2==2.3.1
+numpy==1.18.3
+pandas==1.0.3
+Pillow==7.0.0
+wheel=0.34.2
+python-dateutil==2.8.1
+pytz==2019.3
+six==1.14.0
+sqlparse==0.3.0

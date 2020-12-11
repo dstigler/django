@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="page-wrapper">
+        <h2>Logged Out</h2>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                <a href="{% url 'login'%}">Log In Again</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}

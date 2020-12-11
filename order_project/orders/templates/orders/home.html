@@ -1,0 +1,76 @@
+{% extends "index.html" %}
+
+{% block content %}     
+    <h1 class="article-title d-inline-block ">Aufträge</h1>
+    <div class="col-6 align-left m-4">
+        <i id="search-icon" class="fas fa-search"></i>
+        <input id="tableSearch" type="text" placeholder="Suche" value="{{search_term}}">    
+        <select id="page_elem" class="mdb-select md-form">
+            <option value="5">5</option>
+            <option selected value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+    </div>
+    <div id="replaceable_order_content">
+        {% include 'orders/order_results_partial.html' %}
+    </div>
+{% endblock content %}
+
+{%  block extra_js %}
+    <script type="text/javascript">
+        $('#replaceable_order_content').on('click', '.clickable-row', function () {
+            window.location = $(this).data('href');
+        });
+
+        let scheduled_function = false
+        const delay_by_in_ms = 700
+
+        let ajax_order_search = function(endpoint, request_parameters){
+            $.ajax({
+                url:endpoint, 
+                data:request_parameters,
+                type: 'get'})
+            .done(response => {
+                var content = $('#replaceable_order_content')
+                content.fadeTo('fast', 0).promise()
+                .then(() => {
+                    content.html(response)
+                    content.fadeTo('fast', 1)
+                    $('#search-icon').removeClass('blink')
+                })
+            })
+        }
+
+        let config_ajax_order_search = function(search, page, page_elem){
+            const request_parameters = {
+                search: search,
+                page: page,
+                page_elem: page_elem
+            }
+
+            if (scheduled_function) {
+                clearTimeout(scheduled_function)
+            }
+
+            scheduled_function = setTimeout(ajax_order_search, delay_by_in_ms, "{% url 'orders-home'%}", request_parameters)
+        }
+
+        $(page_elem).on('change', function(){
+            config_ajax_order_search($("#tableSearch").val(), 1, $("#page_elem option:selected").val())
+        })
+
+        $(tableSearch).on('keyup', function(){
+            config_ajax_order_search($(this).val(), 1, $("#page_elem option:selected").val())
+        });
+    
+        $("#replaceable_order_content").on('click', '.pagination-btn', function(){
+            config_ajax_order_search(
+                $("#tableSearch").val(), 
+                Number($(this)[0].attributes.page_number.value), 
+                $("#page_elem option:selected").val())
+        })
+    </script>
+{% endblock extra_js %}
+    
